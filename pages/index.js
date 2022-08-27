@@ -1,15 +1,33 @@
-import Image from "next/image"
-import Link from "next/link"
-import Coffee from '../public/coffee.JPG'
+const Pokemon = ({ pokemon }) => {
+  return(
+    <li>{pokemon.name}</li>
+  )
+}
 
-export default function Home() {
+export default function Pokemones({ pokemones }) {
+  console.log(pokemones)
   return (
     <div>
-      <p>Chanchito feliz</p>
-      {/* <Image src='/coffee.JPG' width={400} height={400}/> */}
-      {/* <Image src='/coffee.JPG' layout="fill"/> */}
-      <Image src={Coffee} width={400} height={400}/>
-      <Link href="/chanchitos">Ir a Chanchitos</Link>
-  </div>
+      <p>Pokemones</p>
+      <ul>
+        {pokemones.map(pokemon => <Pokemon pokemon={pokemon} key={pokemon.name} />)}
+      </ul>
+    </div>
   )
+}
+
+// Si next encuentra esta funcion, generara un HTML previo para cada pagina
+// ==> aumento considerable de la velocidad de carga
+
+// Indicarle a next que esta pagina se va a generar de manera estatica
+// npm run build
+
+// Static Site Generation
+export const getStaticProps = async () => {
+  const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=151')
+  const data = await response.json()
+
+  return {
+    props: { pokemones: data.results }
+  }
 }
